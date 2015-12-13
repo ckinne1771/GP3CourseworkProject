@@ -1,36 +1,42 @@
 #include "cPlayer.h"
-
+//Constructor
 cPlayer::cPlayer() : cModel()
 {
 
 }
 
+//attaches the input Manager
 void cPlayer::attachInputMgr(cInputMgr* inputMgr)
 {
 	m_InputMgr = inputMgr;
 }
 
+//Where most of the input logic takes place.Different boolean values are changed
+// depnding on the key pressed. These values are then used in other methods to assist with logic in the main.
 void cPlayer::update(float elapsedTime)
 {
+	//if left arrow if pressed move left
 	if (m_InputMgr->isKeyDown(VK_LEFT))
 	{
 		hasMovedLeft = true;
 		
 	}
+	//if right arrow is pressed move right
 	if (m_InputMgr->isKeyDown(VK_RIGHT))
 	{
 		hasMovedRight = true;
 	}
-
+	//if up arrow is pressed move up
 	if (m_InputMgr->isKeyDown(VK_UP))
 	{
 		hasMovedUp = true;
 	}
-
+	// if down arrow is pressed move down
 	if (m_InputMgr->isKeyDown(VK_DOWN))
 	{
 		hasMovedDown = true;
 	}
+	//if W is pressed move forward
 	if (m_InputMgr->isKeyDown(87))
 	{
 		//translationZ += 5.0f;
@@ -39,6 +45,7 @@ void cPlayer::update(float elapsedTime)
 	
 
 	}
+	// If S is pressed move backward
 	if (m_InputMgr->isKeyDown(83))
 	{
 		//translationZ -= 5.0f;
@@ -46,6 +53,7 @@ void cPlayer::update(float elapsedTime)
 		hasMovedBackward = true;
 	}
 
+	//If R is pressed change the camera
 	if (m_InputMgr->isKeyDown(82))
 	{
 		if (changeCam == false)
@@ -58,7 +66,7 @@ void cPlayer::update(float elapsedTime)
 			changeCam == false;
 		}
 	}
-
+	//If space is pressed togge sound
 	if (m_InputMgr->isKeyDown(VK_SPACE))
 	{
 		if (hasToggledSound == true)
@@ -85,6 +93,8 @@ cPlayer::~cPlayer()
 {
 
 }
+
+//The following mothods are used in main to determine if it sound carry out certain functions like movement, changing camera or toggling sound. 
 
 bool cPlayer::MoveForward()
 {
@@ -168,7 +178,7 @@ bool cPlayer::ChangingCam()
 	}
 
 }
-
+//used for debug camera as it requires a few more parameters.
 bool cPlayer::enteredDebugState()
 {
 
@@ -201,7 +211,7 @@ bool cPlayer::returnDebugState()
 	}
 }
 
-
+//Reset boolean values. Helpful with logic management
 void cPlayer::Reset()
 {
 	hasMovedBackward = false;

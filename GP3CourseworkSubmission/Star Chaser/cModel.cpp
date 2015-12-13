@@ -1,5 +1,6 @@
 #include "cModel.h"
 
+//Constructor
 cModel::cModel()
 {
 	m_mdlPosition = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -15,10 +16,8 @@ cModel::cModel()
 	m_TextureID = 0;
 }
 
-// +++++++++++++++++++++++++++++++++++++++++++++
-// Setters
-// +++++++++++++++++++++++++++++++++++++++++++++
 
+//Setters and Getters for the attributes of the models.
 void cModel::setPosition(glm::vec3 mdlPosition)
 {
 	m_mdlPosition = mdlPosition;
@@ -59,11 +58,6 @@ void cModel::setScale(glm::vec3 mdlScale)
 {
 	m_mdlScale = mdlScale;
 }
-
-// +++++++++++++++++++++++++++++++++++++++++++++
-// Getters
-// +++++++++++++++++++++++++++++++++++++++++++++
-
 glm::vec3 cModel::getPosition()
 {
 	return m_mdlPosition;
@@ -109,6 +103,7 @@ void cModel::setTextureID(GLuint theTextureID)
 	m_TextureID = theTextureID;
 }
 
+//Initialises the models.
 void cModel::initialise(glm::vec3 mdlPosition, GLfloat mdlRotation, glm::vec3 mdlScale, glm::vec3 mdlDirection, float mdlSpeed, bool mdlIsActive)
 {
 	setPosition(mdlPosition);
@@ -127,6 +122,7 @@ void cModel::initialise(glm::vec3 mdlPosition, GLfloat mdlRotation, glm::vec3 md
 	glTranslatef(mdlPos.x,mdlPos.y,mdlPos.z);
 }
 
+//collision detection code. DOes not work as intended.
 bool cModel::SphereSphereCollision(glm::vec3 mdlPosition, float mdlRadius)
 {
 	const float distSq = lengthSQRD(m_mdlPosition - mdlPosition);
@@ -140,30 +136,25 @@ bool cModel::SphereSphereCollision(glm::vec3 mdlPosition, float mdlRadius)
 	return false; // No Collision
 }
 
+//returns the length squared between the associated model and the target model
 float cModel::lengthSQRD(glm::vec3 mdlLength)
 {
 	return (mdlLength.x * mdlLength.x) + (mdlLength.y * mdlLength.y) + (mdlLength.z * mdlLength.z);
 }
 
-/*
-=================================================================
-Attach the input manager to the sprite
-=================================================================
-*/
+//attach the input manager
 void cModel::attachInputMgr(cInputMgr* inputMgr)
 {
 	m_InputMgr = inputMgr;
 }
-/*
-=================================================================
-Attach the sound manager to the sprite
-=================================================================
-*/
+
+//attach the sound manager
 void cModel::attachSoundMgr(cSoundMgr* soundMgr)
 {
 	m_SoundMgr = soundMgr;
 }
 
+//destructor
 cModel::~cModel()
 {
 

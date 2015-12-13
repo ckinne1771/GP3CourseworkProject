@@ -1,11 +1,7 @@
-/*
-==================================================================================
-cLight.cpp
-==================================================================================
-*/
+
 
 #include "cLight.h"
-
+//Constructor. Sets default values for the attributes.
 cLight::cLight()
 {
 	m_LightID = GL_LIGHT0;
@@ -20,6 +16,8 @@ cLight::cLight()
 	m_LinearAttenuation = 0.0;
 	m_QuadraticAttenuation = 0.0;
 }
+
+//Constructor. Passes in values which are assigned to the attributes.
 cLight::cLight(GLenum lightID, lightColour4 ambient, lightColour4 diffuse, lightColour4 specular, glm::vec4 position, glm::vec3 spotDirection
 	, GLfloat  spotExponent, GLfloat  spotCutoff, GLfloat  constantAttenuation, GLfloat  linearAttenuation, GLfloat  quadraticAttenuation)
 {
@@ -36,6 +34,7 @@ cLight::cLight(GLenum lightID, lightColour4 ambient, lightColour4 diffuse, light
 	m_QuadraticAttenuation = quadraticAttenuation;
 
 }
+//Turns the light on
 
 void cLight::lightOn()
 {
@@ -52,6 +51,7 @@ void cLight::lightOn()
 	glLightf(m_LightID, GL_QUADRATIC_ATTENUATION, m_QuadraticAttenuation);
 }
 
+//turns the light off
 void cLight::lightOff()
 {
 	glDisable(m_LightID);

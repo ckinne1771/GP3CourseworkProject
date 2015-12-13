@@ -1,11 +1,8 @@
-/*
-==========================================================================
-ccCamera.h
-==========================================================================
-*/
+
 
 #include "cCamera.h"
 
+//Constructor. Sets default values for the attributes
 cCamera::cCamera()
 {
 	m_viewPort = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
@@ -16,7 +13,7 @@ cCamera::cCamera()
 
 }
 
-
+//Constructor. Passes in the screen width and height to establish a viewport.
 cCamera::cCamera(int screenWidth, int screenHeight)
 {
 	m_viewPort = glm::vec4(0, 0, screenWidth, screenHeight);
@@ -26,11 +23,12 @@ cCamera::cCamera(int screenWidth, int screenHeight)
 	m_angle = 0.0f;
 }
 
+//Destructor
 cCamera::~cCamera()
 {
 	
 }
-
+//Getters and setters
 void cCamera::setTheViewPort(int x, int y, int width, int height)
 {
 	m_viewPort = glm::vec4(x, y, width, height);
@@ -137,7 +135,7 @@ GLfloat cCamera::getAngle()
 }
 
 
-
+//Updates the attributes of the camera. Called at certain points in main
 void cCamera::update()
 {
 	glRotatef(m_angle, 0, 1, 0);

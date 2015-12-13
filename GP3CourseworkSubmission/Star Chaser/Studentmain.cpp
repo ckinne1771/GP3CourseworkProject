@@ -37,11 +37,6 @@ int WINAPI WinMain(HINSTANCE hInstance,
 
 	float lookAt = 5.0f;
 
-	int mouseX;
-		int mouseY;
-
-		float currentRotX =0;
-		float currentRotY =0;
     //This is our window
 	static cWNDManager* pgmWNDMgr = cWNDManager::getInstance();
 
@@ -63,6 +58,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	// Attach the keyboard manager
 	pgmWNDMgr->attachInputMgr(theInputMgr);
 
+	//Creating the sun and earth spheres
 	cSphere theSun(4, 40, 40);
 	cSphere theEarth(1, 40, 40);
 
@@ -83,7 +79,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
         return 1;
     }
 
-	// Create Texture map
+	// Creates Texture maps. These textures will be used for many of the obkects rendered in the scene.
 	cTexture tardisTexture;
 	tardisTexture.createTexture("Models/tardis.png");
 	cTexture spaceShipTexture;
@@ -98,7 +94,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	earthTexture.createTexture("Images/EarthFlip.png");
 
 
-
+	//Initialising the sun and earth
 	theSun.initialise(sunTexture.getTexture(), glm::vec3(10, 10, 0), glm::vec3(0,0,0));
 	theEarth.initialise(earthTexture.getTexture(), glm::vec3(5, 10, 10), glm::vec3(0, 0, 0));
 	// the starfield
@@ -107,7 +103,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	// Create Materials for lights
 	cMaterial sunMaterial(lightColour4(0.0f, 0.0f, 0.0f, 1.0f), lightColour4(1.0f, 1.0f, 1.0f, 1.0f), lightColour4(1.0f, 1.0f, 1.0f, 1.0f), lightColour4(0, 0, 0, 1.0f), 5.0f);
 	cMaterial earthMaterial(lightColour4(0.2f, 0.2f, 0.2f, 1.0f), lightColour4(1.0f, 1.0f, 1.0f, 1.0f), lightColour4(1.0f, 1.0f, 1.0f, 1.0f), lightColour4(0, 0, 0, 1.0f), 50.0f);
-	// Create Light
+	// Create Lights
 	cLight sunLight(GL_LIGHT0, lightColour4(0, 0, 0, 1), lightColour4(1, 1, 1, 1), lightColour4(1, 1, 1, 1), glm::vec4(0, 0, 20, 1),
 		glm::vec3(0.0, 0.0, 1.0), 0.0f, 180.0f, 1.0f, 0.0f, 0.0f);
 	cLight lfLight(GL_LIGHT1, lightColour4(0, 0, 0, 1), lightColour4(1, 1, 1, 1), lightColour4(1, 1, 1, 1), glm::vec4(30, 0, 100, 1),
@@ -120,16 +116,14 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	GLfloat g_Ambient[] = { 0.2, 0.2, 0.2, 1.0 };
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, g_Ambient);
 
-	// load game fonts
-	// Load Fonts
+	//Creates a list of fonts and loads them
 	LPCSTR gameFonts[3] = { "Fonts/digital-7.ttf", "Fonts/space age.ttf", "Fonts/doctor_who.ttf" };
 	
 	theFontMgr->addFont("SevenSeg", gameFonts[0], 24);
 	theFontMgr->addFont("Space", gameFonts[1], 24);
 	theFontMgr->addFont("DrWho", gameFonts[2], 48);
 
-	// load game sounds
-	// Load Sound
+	//Creates a list of sounds and loads them
 	LPCSTR gameSounds[3] = { "Audio/who10Edit.wav", "Audio/shot007.wav", "Audio/explosion2.wav" };
 
 
@@ -149,19 +143,16 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	//Clear key buffers
 	theInputMgr->clearBuffers(theInputMgr->KEYS_DOWN_BUFFER | theInputMgr->KEYS_PRESSED_BUFFER);
 
-	// Model
+	// Loading the models
 	cModelLoader tardisMdl;
 	tardisMdl.loadModel("Models/tardis1314.obj", tardisTexture); // Player
 
 	cModelLoader spaceShipMdl;
 	spaceShipMdl.loadModel("Models/SpaceShip/Sample_Ship.obj", spaceShipTexture); // Enemy
 
+	//Initalising the player objects. These are used for the controllable player and the enemies
 
-	cModelLoader theLaser;
-	theLaser.loadModel("Models/laser.obj", laserTexture);
-
-
-
+	//the player
 	cPlayer thePlayer;
 	thePlayer.initialise(glm::vec3(0, 0, -15), 0.0f, glm::vec3(1, 1, 1), glm::vec3(0, 0, 0), 5.0f, true);
 
@@ -170,7 +161,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	thePlayer.attachSoundMgr(theSoundMgr);
 
 
-
+	//the enemies
 	cPlayer theEnemyShip;
 	theEnemyShip.initialise(glm::vec3(10, 3, 0), 270.0f, glm::vec3(10, 10, 10), glm::vec3(0, 0, 0), 5.0f, true);
 	theEnemyShip.setPosition(glm::vec3(10, 3, 0));
@@ -222,35 +213,40 @@ int WINAPI WinMain(HINSTANCE hInstance,
         //We get the time that passed since the last frame
 		float elapsedTime = pgmWNDMgr->getElapsedSeconds();
 		
-		// Lab code goes here
+		//Clear the buffers
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		//Initialise OpenGL
 		theOGLWnd.initOGL(windowWidth,windowHeight);
 
+		//Set matrix Mode to Model View. Ensures the models load properly.
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 		glLoadMatrixf((GLfloat*)&theCamera.getTheViewMatrix());
 
-		
+		//Render the star field
 		theStarField.render(0.0f);
+		//render the sun, set its materials and turn on its assinged light.
 		theSun.prepare(0.0f);
 		sunMaterial.useMaterial();
 		sunLight.lightOn();
 		theSun.render(0.0f);
 		
+		//Turn on ambient lights
 		lfLight.lightOn();
 		rfLight.lightOn();
 		cbLight.lightOn();
 
 		glPushMatrix();
+		//render the earth.
 		theEarth.prepare(0.0f);
 		earthMaterial.useMaterial();
 		theEarth.render(0.0f);
 
 		
-
+		//Render the player
 		tardisMdl.renderMdl(thePlayer.getPosition(), thePlayer.getRotation(), thePlayer.getScale());
 
-		
+		//render the enemies
 		if (theEnemyShip.isActive() == true)
 		{
 			spaceShipMdl.renderMdl(theEnemyShip.getPosition(), theEnemyShip.getRotation(), theEnemyShip.getScale());
@@ -280,14 +276,12 @@ int WINAPI WinMain(HINSTANCE hInstance,
 		spaceShipMdl.renderMdl(theEnemyShip2.getPosition(), theEnemyShip2.getRotation(), theEnemyShip2.getScale());
 		thePlayer.update(elapsedTime);
 
-		
-
-		
-
-		//theCamera.setTheCameraDirection(glm::vec3(currentRotX, currentRotY, theCamera.getTheCameraPos().z));
-		
-
+		//Update Camera
 		theCamera.update();
+
+		//This section of the code inteacts with the input logic. It calls methods in the player class in order to return boolean values edited by the input.
+		//With htis, switching the camera, movement of models and toggling of sound is enabled.
+		//moving forward
 		if (thePlayer.MoveForward() == true)
 		{
 						
@@ -326,7 +320,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 			
 			
 		}
-
+		//toggle sound
 		if (thePlayer.hasToggledSound == true)
 		{
 
@@ -343,6 +337,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 			}
 		}
 
+		//moving backward
 		if (thePlayer.MoveBackward() == true)
 		{
 
@@ -367,6 +362,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 				thePlayer.Reset();
 			}
 		}
+		//moving left
 
 		if (thePlayer.MoveLeft() == true)
 		{
@@ -377,6 +373,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 			}
 
 		}
+		//moving right
 		if (thePlayer.MoveRight() == true)
 		{
 			if (thePlayer.returnDebugState() == false)
@@ -386,6 +383,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 			}
 
 		}
+		//moving up
 		if (thePlayer.MoveUp() == true)
 		{
 			if (thePlayer.returnDebugState() == false)
@@ -397,6 +395,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 
 
 		}
+		//moving down
 		if (thePlayer.MoveDown() == true)
 		{
 			if (thePlayer.returnDebugState()==false)
@@ -409,7 +408,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 
 
 		}
-
+		//changing the camera
 		if (thePlayer.ChangingCam() == true)
 		{
 			if (thePlayer.returnDebugState() == false)
@@ -447,14 +446,16 @@ int WINAPI WinMain(HINSTANCE hInstance,
 		
 		glPushMatrix();
 
-		
+		//changes the camera to orthographic to draw text
 		theOGLWnd.setOrtho2D(windowWidth, windowHeight);
 		theFontMgr->getFont("Space")->printText("Star Chaser", FTPoint(10, 35, 0.0f), colour3f(255.0f,0.0f,0.0f));
 		
 		glPopMatrix();
 
+		//swap buffers
 		pgmWNDMgr->swapBuffers();
 		
+		//increment the elapsed time.
 		tCount += elapsedTime;
 
 		//Clear key buffers
